@@ -1,0 +1,52 @@
+# Candidate entry for the Hermes plugin catalog.
+# Target: NousResearch/hermes-agent -> plugin-catalog/abap-remote-fs.yaml
+#
+# The `sha` is an exact 40-character commit pin, as the catalog requires.
+# It points at the commit that froze the plugin code (the initial release).
+# To ship a new version, move the pin with a new PR - never a branch or tag.
+name: abap-remote-fs
+repo: https://github.com/Smotherer007/hermes-abap-remote-fs
+sha: c9c2b251e34750d69d7ed943ec2efe63465fce6c
+description: ABAP remote filesystem for SAP systems over ADT - search, read, lock, write and
+  activate ABAP objects, plus transports, ATC findings, runtime dumps and performance traces.
+  Standard library only, credentials stored per named profile, and a read-only profile list
+  that blocks every change on production.
+maintainer: Patrick Weppelmann
+tier: community
+category: tools
+version: "1.0.0"
+docs_url: https://github.com/Smotherer007/hermes-abap-remote-fs#readme
+platforms: []
+capabilities:
+  provides_tools:
+  - abap_setup
+  - abap_status
+  - abap_profile
+  - abap_test_connection
+  - abap_search
+  - abap_object_structure
+  - abap_read
+  - abap_lock
+  - abap_unlock
+  - abap_write
+  - abap_activate
+  - abap_syntax_check
+  - abap_unit_test
+  - abap_query
+  - abap_table
+  - abap_where_used
+  - abap_object_types
+  - abap_node_contents
+  - abap_transports
+  - abap_atc
+  - abap_dumps
+  - abap_traces
+  - abap_trace_hitlist
+  - abap_transport_details
+  - abap_text_elements
+  - abap_set_text_elements
+  - abap_create_object
+  provides_hooks:
+  - pre_tool_call
+  provides_middleware: []
+  requires_env: []
