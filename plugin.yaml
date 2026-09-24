@@ -1,0 +1,74 @@
+name: abap-remote-fs
+version: 1.0.0
+description: "ABAP remote filesystem for Hermes: read, search, write and activate ABAP objects on SAP systems via ADT."
+author: Patrick Weppelmann
+kind: standalone
+manifest_version: 2
+api_version: 1
+license: MIT
+homepage: https://github.com/Smotherer007/hermes-abap-remote-fs
+tags: [abap, sap, adt, development]
+provides_tools:
+  - abap_setup
+  - abap_status
+  - abap_profile
+  - abap_test_connection
+  - abap_search
+  - abap_object_structure
+  - abap_read
+  - abap_lock
+  - abap_unlock
+  - abap_write
+  - abap_activate
+  - abap_syntax_check
+  - abap_unit_test
+  - abap_query
+  - abap_table
+  - abap_where_used
+  - abap_object_types
+  - abap_node_contents
+  - abap_transports
+  - abap_atc
+  - abap_dumps
+  - abap_traces
+  - abap_trace_hitlist
+  - abap_transport_details
+  - abap_text_elements
+  - abap_set_text_elements
+  - abap_create_object
+provides_hooks:
+  - pre_tool_call
+# No requires_env: systems can be configured at runtime with abap_setup,
+# from a config file, or from these optional variables.
+optional_env:
+  - name: ABAP_URL
+    description: "ADT base URL incl. scheme and port, e.g. http://sap.example.com:8000"
+  - name: ABAP_USER
+    description: "SAP logon user"
+  - name: ABAP_PASSWORD
+    description: "SAP password"
+    secret: true
+  - name: ABAP_CLIENT
+    description: "SAP client / mandant, e.g. 100"
+  - name: ABAP_LANGUAGE
+    description: "Logon language, e.g. EN"
+  - name: ABAP_CONFIG
+    description: "Path to the profile file (default: $HERMES_HOME/abap-config.json)"
+config_schema:
+  safety_level:
+    type: str
+    choices: [open, confirm, readonly]
+    default: open
+    label: "Safety level"
+    description: "Lock, write, text elements, object creation, dangerous unit tests. open: run directly. confirm: ask a human first. readonly: blocked."
+  activation:
+    type: str
+    choices: [inherit, confirm, block]
+    default: inherit
+    label: "Activation"
+    description: "abap_activate. inherit: like the safety level. confirm: always ask a human. block: a person activates in SAP."
+  readonly_profiles:
+    type: list
+    default: []
+    label: "Read-only profiles"
+    description: "Profile names (e.g. prod) where every change is blocked."
