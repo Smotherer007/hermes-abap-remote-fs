@@ -8,7 +8,8 @@ name: abap-remote-fs
 repo: https://github.com/Smotherer007/hermes-abap-remote-fs
 sha: c9c2b251e34750d69d7ed943ec2efe63465fce6c
 description: ABAP remote filesystem for SAP systems over ADT - search, read, lock, write and
-  activate ABAP objects, plus transports, ATC findings, runtime dumps and performance traces.
+  activate ABAP objects, plus transports, ATC findings, runtime dumps, performance traces and
+  the ADT debugger (breakpoints, stepping, call stack, variables).
   Standard library only, credentials stored per named profile, and a read-only profile list
   that blocks every change on production.
 maintainer: Patrick Weppelmann
@@ -46,6 +47,12 @@ capabilities:
   - abap_text_elements
   - abap_set_text_elements
   - abap_create_object
+  - abap_debug_breakpoint
+  - abap_debug_listen
+  - abap_debug_attach
+  - abap_debug_step
+  - abap_debug_stack
+  - abap_debug_variables
   provides_hooks:
   - pre_tool_call
   provides_middleware: []

@@ -36,6 +36,12 @@ provides_tools:
   - abap_text_elements
   - abap_set_text_elements
   - abap_create_object
+  - abap_debug_breakpoint
+  - abap_debug_listen
+  - abap_debug_attach
+  - abap_debug_step
+  - abap_debug_stack
+  - abap_debug_variables
 provides_hooks:
   - pre_tool_call
 # No requires_env: systems can be configured at runtime with abap_setup,

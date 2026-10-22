@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from . import browse, connection, data, edit, operations, quality
+from . import browse, connection, data, debug, edit, operations, quality
 
 TOOLSET = "abap"
 
@@ -34,6 +34,12 @@ TOOLS = (
     (browse.TEXT_ELEMENTS_SCHEMA, browse.text_elements),
     (edit.SET_TEXT_ELEMENTS_SCHEMA, edit.set_text_elements),
     (edit.CREATE_OBJECT_SCHEMA, edit.create_object),
+    (debug.BREAKPOINT_SCHEMA, debug.breakpoint),
+    (debug.LISTEN_SCHEMA, debug.listen),
+    (debug.ATTACH_SCHEMA, debug.attach),
+    (debug.STEP_SCHEMA, debug.step),
+    (debug.STACK_SCHEMA, debug.stack),
+    (debug.VARIABLES_SCHEMA, debug.variables),
 )
 
 #: Tools that change repository objects. The safety level applies to them.

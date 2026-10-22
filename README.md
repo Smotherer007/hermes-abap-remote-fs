@@ -4,7 +4,7 @@ ABAP remote filesystem plugin for [Hermes Agent](https://github.com/NousResearch
 
 With it, Hermes can read, search, write and activate ABAP objects on SAP systems. It talks to the system through the ADT protocol (ABAP Development Tools), the same REST interface Eclipse uses. That means the normal ICM port of the AS ABAP instance, not an RFC port.
 
-This is the Hermes port of [pi-abap-fs](https://github.com/Smotherer007/pi-abap-fs). The 27 tools, their parameters and the config file format are the same. pi-abap-fs builds on the npm library [abap-adt-api](https://github.com/marcellourbani/abap-adt-api). This plugin has its own ADT client in plain Python, ported from that library's request and response code, and needs nothing beyond the standard library.
+This is the Hermes port of [pi-abap-fs](https://github.com/Smotherer007/pi-abap-fs). The 33 tools, their parameters and the config file format are the same. pi-abap-fs builds on the npm library [abap-adt-api](https://github.com/marcellourbani/abap-adt-api). This plugin has its own ADT client in plain Python, ported from that library's request and response code, and needs nothing beyond the standard library.
 
 ## Installation
 
@@ -46,8 +46,25 @@ All tools belong to the `abap` toolset.
 | Check & test | `abap_syntax_check`, `abap_unit_test`, `abap_atc` |
 | Data | `abap_query`, `abap_table` |
 | Operations & transport | `abap_transports`, `abap_transport_details`, `abap_dumps`, `abap_traces`, `abap_trace_hitlist` |
+| Debugger | `abap_debug_breakpoint`, `abap_debug_listen`, `abap_debug_attach`, `abap_debug_step`, `abap_debug_stack`, `abap_debug_variables` |
 
 Each tool returns JSON. `result` holds the text for the model, and the other keys hold structured details. On failure the tool returns `{"error": "..."}`, and the text is SAP's own message.
+
+## Debugger
+
+The debugger tools drive the ADT debugger resources, the same ones SAP's own IDE uses, so nothing has to be installed on the system and no GUI is involved.
+
+Typical cycle:
+
+1. `abap_debug_breakpoint action=set name=RSPARAM line=3` sets an external breakpoint and returns SAP's breakpoint id. `action=list` shows the breakpoints this plugin recorded, `action=delete breakpointId=...` removes one.
+2. `abap_debug_listen` long-polls until a program of that user hits the breakpoint and returns the debuggee (program, include, line). It blocks, so start the program in another session first.
+3. `abap_debug_attach debuggeeId=...` takes control, then `abap_debug_stack` shows the call stack, `abap_debug_variables` the variables in scope (and `parent=<id>` the components of a structure or table).
+4. `abap_debug_step action=stepOver|stepInto|stepReturn|stepContinue` moves on, `terminateDebuggee` stops the program, `detachDebugger` hands it back.
+
+Two things to know before using it:
+
+- **External breakpoints do not fire for dialog sessions.** A program started in SAP GUI (SE38, a transaction, `/h`) runs past an external breakpoint, because SAP applies those to RFC, HTTP and background contexts. The debugger therefore fits programs that are triggered outside the GUI, for example a background job or a web/RFC entry point. Verified on SAP_BASIS 816.
+- The debug session lives in an ABAP roll area that SAP reaches again through the `sap-contextid` cookie, so every debugger tool call opens a stateful session. Do not interleave unrelated stateful work while debugging.
 
 ## Locks: what is different from pi-abap-fs
 
@@ -128,7 +145,7 @@ The tests import the plugin the way Hermes does and talk to a small SAP stand-in
 | `client.py` | session runner, object resolution, lock registry |
 | `formatters.py` | pure display functions |
 | `config.py` | profile store |
-| `tools/` | the 27 tools, grouped like the table above |
+| `tools/` | the 33 tools, grouped like the table above |
 | `safety.py` | guard rails (`pre_tool_call` hook) |
 
 ## License

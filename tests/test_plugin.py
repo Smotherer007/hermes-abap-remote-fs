@@ -45,7 +45,7 @@ def ctx():
 class TestRegistration:
     def test_every_declared_tool_is_registered(self, ctx):
         assert sorted(ctx.tools) == sorted(manifest()["provides_tools"])
-        assert len(ctx.tools) == 27
+        assert len(ctx.tools) == 33
         assert {t for t, _, _ in ctx.tools.values()} == {"abap"}
 
     def test_schemas_are_consistent(self, ctx):

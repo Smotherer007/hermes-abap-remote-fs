@@ -2,7 +2,7 @@
 
 Read, search, write and activate ABAP objects on SAP systems through the ADT
 protocol (ABAP Development Tools). Port of the pi extension pi-abap-fs: the
-same 27 tools with the same parameters, the same config file format, and a
+same 33 tools with the same parameters, the same config file format, and a
 pure-Python ADT client in place of the npm library abap-adt-api.
 
 Layout:
@@ -13,7 +13,7 @@ Layout:
   client.py      session runner, object resolution, lock registry
   formatters.py  pure functions: ADT data -> display strings
   config.py      profile store, persisted with 0600 permissions
-  tools/         the 27 tools, grouped by area
+  tools/         the 33 tools, grouped by area
   safety.py      safety level, activation rule, read-only profiles
 """
 
