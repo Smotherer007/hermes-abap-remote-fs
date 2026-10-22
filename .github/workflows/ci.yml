@@ -5,6 +5,16 @@ on:
     branches: [main, master]
   pull_request:
     branches: [main, master]
+  workflow_dispatch:
+
+env:
+  # hermes-agent gates every runtime dependency behind
+  # `python_version >= '3.14'` (see the comment in its pyproject.toml:
+  # "we *only* support 3.14"). On an older interpreter `uv pip install -e .`
+  # installs the package with zero dependencies and the `hermes` CLI dies at
+  # import time on `ruamel.yaml`, which looks like a plugin failure but is not.
+  # The plugin itself stays 3.11-compatible - only the host needs 3.14.
+  HERMES_PYTHON: "3.14"
 
 jobs:
   test:
@@ -40,18 +50,28 @@ jobs:
           repository: NousResearch/hermes-agent
           path: hermes-agent
 
-      - uses: astral-sh/setup-uv@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.HERMES_PYTHON }}
+
+      - uses: astral-sh/setup-uv@v10
 
       - name: Install Hermes
         working-directory: hermes-agent
         run: |
-          uv venv -p 3.11 .venv
+          set -euo pipefail
+          uv venv -p "$HERMES_PYTHON" .venv
           uv pip install -p .venv/bin/python -e .
+          # Smoke test: a host without its runtime dependencies must fail here,
+          # not three steps later with a ModuleNotFoundError that reads like a
+          # problem with this plugin.
+          .venv/bin/hermes --version
 
       - name: Doctor and validate
         env:
           HERMES_HOME: ${{ runner.temp }}/hermes-home
         run: |
+          set -euo pipefail
           mkdir -p "$HERMES_HOME"
           hermes-agent/.venv/bin/hermes plugins doctor plugin --ci
           hermes-agent/.venv/bin/hermes plugins validate plugin
